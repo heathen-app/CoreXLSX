@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to
 // build this package.
 
@@ -25,8 +25,10 @@ let package = Package(
     // .package(url: /* package url */, from: "1.0.0"),
     .package(url: "https://github.com/maxdesiatov/XMLCoder.git",
              .upToNextMinor(from: "0.14.0")),
-    .package(url: "https://github.com/weichsel/ZIPFoundation.git",
-             .upToNextMinor(from: "0.9.11")),
+//    .package(url: "https://github.com/weichsel/ZIPFoundation.git",
+//                 .upToNextMinor(from: "0.9.11")),
+    .package(url: "https://github.com/agentk/ZIPFoundation.git",
+             branch: "main"),
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define
