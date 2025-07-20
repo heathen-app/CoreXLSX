@@ -316,3 +316,11 @@ public class XLSXFile {
     .reduce([]) { $0 + $1 } ?? []
   }
 }
+
+extension XLSXFile: Sequence {
+  
+  public func makeIterator() -> AnyIterator<ZIPFoundation.Entry> {
+    archive.makeIterator()
+  }
+  
+}
