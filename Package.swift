@@ -27,8 +27,8 @@ let package = Package(
              .upToNextMinor(from: "0.14.0")),
 //    .package(url: "https://github.com/weichsel/ZIPFoundation.git",
 //                 .upToNextMinor(from: "0.9.11")),
-    .package(url: "https://github.com/agentk/ZIPFoundation.git",
-             branch: "main"),
+    .package(url: "https://github.com/heathen-app/ZIPFoundation.git",
+             branch: "linux"),
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define
