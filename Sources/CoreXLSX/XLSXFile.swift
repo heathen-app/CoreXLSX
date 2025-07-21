@@ -332,8 +332,7 @@ public class XLSXFile {
     return try decoder.decode(type, from: data)
   }
   
-  public func bruteForceWorksheetsAndStrings() -> (Array<Workbook>, Array<Worksheet>, SharedStrings?) {
-    var workbooks = Array<Workbook>()
+  public func bruteForceWorksheetsAndStrings() -> (Array<Worksheet>, SharedStrings?) {
     var worksheets = Array<Worksheet>()
     var sharedStrings: SharedStrings?
     
@@ -341,11 +340,10 @@ public class XLSXFile {
     
     for entry in self {
       if let strings = try? parseEntry(entry, SharedStrings.self), strings.isEntirelyEmpty == false { sharedStrings = strings }
-      if let book = try? parseEntry(entry, Workbook.self) { workbooks.append(book) }
       if let sheet = try? parseEntry(entry, Worksheet.self), sheet.isEntirelyBlank == false { worksheets.append(sheet) }
     }
     
-    return (workbooks, worksheets, sharedStrings)
+    return (worksheets, sharedStrings)
   }
 }
 
