@@ -31,6 +31,10 @@ final class CoreXLSXTests: XCTestCase {
 
     let ws = try file.parseWorksheet(at: "xl/worksheets/sheet1.xml")
     XCTAssertEqual(ws.data?.rows.count, 0)
+    
+    let (books, sheets, strings) = try file.bruteForceWorksheetsAndStrings()
+    XCTAssertEqual(books.count, 1)
+    XCTAssertEqual(sheets.count, 1)
   }
 
   func testHelloWorld() throws {

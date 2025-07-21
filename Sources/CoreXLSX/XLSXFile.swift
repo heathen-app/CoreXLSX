@@ -315,12 +315,65 @@ public class XLSXFile {
     }
     .reduce([]) { $0 + $1 } ?? []
   }
+  
+  // MARK: - Dave's Hacks
+  
+  /// Parse a file within `archive` at `path`. Parsing result is
+  /// an instance of `type`.
+  func parseEntry<T: Decodable>(
+    _ entry: Entry,
+    _ type: T.Type
+  ) throws -> T {
+    var data = Data()
+    _ = try archive.extract(entry, bufferSize: bufferSize) {
+      data += $0
+    }
+
+    return try decoder.decode(type, from: data)
+  }
+  
+  public func bruteForceWorksheetsAndStrings() -> (Array<Workbook>, Array<Worksheet>, SharedStrings?) {
+    var workbooks = Array<Workbook>()
+    var worksheets = Array<Worksheet>()
+    var sharedStrings: SharedStrings?
+    
+    decoder.keyDecodingStrategy = .useDefaultKeys
+    
+    for entry in self {
+      if let strings = try? parseEntry(entry, SharedStrings.self), strings.isEntirelyEmpty == false { sharedStrings = strings }
+      if let book = try? parseEntry(entry, Workbook.self) { workbooks.append(book) }
+      if let sheet = try? parseEntry(entry, Worksheet.self), sheet.isEntirelyBlank == false { worksheets.append(sheet) }
+    }
+    
+    return (workbooks, worksheets, sharedStrings)
+  }
 }
 
 extension XLSXFile: Sequence {
   
   public func makeIterator() -> AnyIterator<ZIPFoundation.Entry> {
     archive.makeIterator()
+  }
+  
+}
+
+extension SharedStrings {
+  fileprivate var isEntirelyEmpty: Bool {
+    return uniqueCount == nil && items.isEmpty
+  }
+}
+
+extension Worksheet {
+  
+  fileprivate var isEntirelyBlank: Bool {
+    if properties != nil { return false }
+    if dimension != nil { return false }
+    if sheetViews != nil { return false }
+    if formatProperties != nil { return false }
+    if columns != nil { return false }
+    if data != nil { return false }
+    if mergeCells != nil { return false }
+    return true
   }
   
 }
